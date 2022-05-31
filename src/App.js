@@ -13,6 +13,11 @@ const runScript = async (code) => {
 
 const App = () => {
   const [output, setOutput] = useState("(loading...)");
+  const [reload, setReload] = useState(false);
+
+  const handleReloadClick = () => {
+    setReload(!reload)
+  }
 
   useEffect(() => {
     const run = async () => {
@@ -29,8 +34,9 @@ const App = () => {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          5 + 7 = {output}
+          {output}
         </p>
+        <button onClick={handleReloadClick}>Reload</button>
       </header>
     </div>
   );
