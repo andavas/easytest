@@ -1,41 +1,24 @@
-import { useEffect, useState } from 'react';
+import React from 'react'
 import script from './python/main.py';
+import script2 from './python/main2.py';
 import logo from './logo.svg';
 import './App.css';
-
-const runScript = async (code) => {
-  const pyodide = await window.loadPyodide({
-    indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/"
-  });
-
-  return await pyodide.runPythonAsync(code);
-}
+import PyComp from './components/PyComp';
+import react from 'react';
 
 const App = () => {
-  const [output, setOutput] = useState("(loading...)");
-  const [reload, setReload] = useState(false);
-
+  const [code, setCode] = React.useState(script);
+  const [reload, setReload] = React.useState(false);
   const handleReloadClick = () => {
     setReload(!reload)
+    reload ? setCode(script) : setCode(script2) 
   }
-
-  useEffect(() => {
-    const run = async () => {
-      const scriptText = await (await fetch(script)).text();
-      const out = await runScript(scriptText);
-      setOutput(out);
-    }
-    run();
-
-  }, []);
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          {output}
-        </p>
+        <PyComp code={code}/> 
         <button onClick={handleReloadClick}>Reload</button>
       </header>
     </div>

@@ -1,7 +1,7 @@
 def sum(a, b):
     return (a + b)
 
-a, b = 5, 7
+a, b = 100, 200
 #a = int(input('Enter 1st number: '))
 #c = int(input('Enter 2nd number: '))
 
