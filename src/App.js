@@ -2,16 +2,19 @@ import React from 'react'
 import script from './python/main.py';
 import script2 from './python/main2.py';
 import logo from './logo.svg';
-import './App.css';
 import PyComp from './components/PyComp';
-import react from 'react';
 import AceEditor from 'react-ace';
+
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-dracula"
 import "ace-builds/src-noconflict/ext-language_tools"
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+
+import { Button, Spinner } from 'react-bootstrap';
+
 const App = () => {
-  const [code, setCode] = React.useState(script);
   const [editorcode, setEditorCode] = React.useState(String.raw`def sum(a, b):
   return (a + b)
 
@@ -25,26 +28,33 @@ def func(content):
   return content
 
 func(f'Soma de {a} e {b} é {sum(a, b)}')`)
-  const [reload, setReload] = React.useState(false);
+  const [code, setCode] = React.useState(editorcode);
+  const [isPyodideLoading, setIsPyodideLoading] = React.useState(false)
 
-  const handleReloadClick = () => {
+  
+  const handleReloadClick = async () => {
     // setReload(!reload)
     // reload ? setCode(script) : setCode(script2) 
     setCode(editorcode)
+   
   }
 
   const handleEditCode = (value) => {
     setEditorCode(value);
   }
 
+  const handlePyodideLoad = (value) => {
+    setIsPyodideLoading(value)
+  }
+
 
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <AceEditor
           mode="python"
           theme="dracula"
+          height='300px'
           onChange={handleEditCode}
           value={editorcode}
           name="UNIQUE_ID_OF_DIV"
@@ -53,10 +63,12 @@ func(f'Soma de {a} e {b} é {sum(a, b)}')`)
             enableBasicAutocompletion: true,
             enableLiveAutocompletion: true,
             enableSnippets: true,
+            fontSize: '12pt'
           }}
         />
-        <PyComp code={code} />
-        <button onClick={handleReloadClick}>Reload</button>
+        <PyComp code={code} handlePyodideLoad={handlePyodideLoad}/>
+        {!isPyodideLoading ? <Spinner style={{margin: '0 0 10px 0'}} animation="border" variant="info" /> : <></>}
+        <Button variant="primary" disabled={!isPyodideLoading} onClick={handleReloadClick}>Reload</Button>
       </header>
     </div>
   );

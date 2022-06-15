@@ -8,17 +8,18 @@ const PyComp = (props) => {
     return await pyodide
   };
   
-  const [output, setOutput] = React.useState("(loading...)");
+  const [output, setOutput] = React.useState("");
   const [pyodide, setPyodide]= React.useState();
   
   React.useEffect(async () => {
-      const script = await (await fetch(props.code)).text();
+      const script = props.code; 
       if (!pyodide) {
         loadPyodide()
         .then((response) => {
           setPyodide(response)
           const out = response.runPython(script);
           setOutput(out);
+          props.handlePyodideLoad(true)
         });
       }
       else { // depois da primeira execução o setPyodide já rodou
