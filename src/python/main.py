@@ -1,4 +1,4 @@
-def sum(a, b):
+def soma(a, b):
     return (a + b)
 
 a, b = 5, 7
@@ -10,4 +10,4 @@ a, b = 5, 7
 def func(content):
     return content
 
-func(f'Soma de {a} e {b} é {sum(a, b)}')
+func('Soma de {} e {} é {})}'.format(a,b,sum(a, b)))
