@@ -28,6 +28,56 @@ def func(content):
   return content
 
 func(f'Soma de {a} e {b} é {sum(a, b)}')`)
+
+const [ testcode, setEditorTest ] = React.useState(String.raw`
+def soma(a, b):
+  return (a + b)
+
+def func(content):
+  return content
+
+a, b = 5, 7
+#a = int(input('Enter 1st number: '))
+#c = int(input('Enter 2nd number: '))
+
+
+from io import StringIO
+import sys
+old_stdout = sys.stdout
+sys.stdout = mystdout = StringIO()
+
+import unittest
+
+class TestSum(unittest.TestCase):
+  def test_list_int(self):
+      """
+      Testa se consegue somar dois números positivos
+      """
+      a, b = 2, 5
+      result = soma(a,b)
+      self.assertEqual(result, 7)
+
+  def test_list_neg_int(self):
+      """
+      Testa se consegue somar dois números negativos
+      """
+      a,b = -2, -8
+      result = soma(a,b)
+      self.assertEqual(result, -10)
+
+  def test_bad_type(self):
+      a,b = 'banana', 3
+      with self.assertRaises(TypeError):
+          result = soma(a,b)
+
+  if __name__ == '__main__':
+    unittest.main()
+    sys.stdout = old_stdout
+    func(mystdout.getvalue())
+# examine mystdout.getvalue()
+
+`)
+
   const [code, setCode] = React.useState(editorcode);
   const [isPyodideLoading, setIsPyodideLoading] = React.useState(false)
 
@@ -35,18 +85,20 @@ func(f'Soma de {a} e {b} é {sum(a, b)}')`)
   const handleReloadClick = async () => {
     // setReload(!reload)
     // reload ? setCode(script) : setCode(script2) 
-    setCode(editorcode)
-   
+    setCode(testcode)
   }
 
   const handleEditCode = (value) => {
     setEditorCode(value);
   }
 
+  const handleEditTest = (value) => {
+    setEditorTest(value);
+  }
+
   const handlePyodideLoad = (value) => {
     setIsPyodideLoading(value)
   }
-
 
   return (
     <div className="App">
@@ -57,7 +109,22 @@ func(f'Soma de {a} e {b} é {sum(a, b)}')`)
           height='300px'
           onChange={handleEditCode}
           value={editorcode}
-          name="UNIQUE_ID_OF_DIV"
+          name="codeEditor"
+          editorProps={{ $blockScrolling: true }}
+          setOptions={{
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+            enableSnippets: true,
+            fontSize: '12pt'
+          }}
+        />
+        <AceEditor
+          mode="python"
+          theme="dracula"
+          height='300px'
+          onChange={handleEditTest}
+          value={testcode}
+          name="testEditor"
           editorProps={{ $blockScrolling: true }}
           setOptions={{
             enableBasicAutocompletion: true,
