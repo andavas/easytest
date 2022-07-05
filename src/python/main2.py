@@ -12,6 +12,7 @@ a, b = 5, 7
 import sys, io
 
 import unittest
+import __main__
 
 class TestSum(unittest.TestCase):
     def test_list_int(self):
@@ -35,9 +36,13 @@ class TestSum(unittest.TestCase):
         with self.assertRaises(TypeError):
             result = soma(a,b)
 
-if __name__ == '__main__':
-    old_stdout = sys.stdout
-    sys.stdout = io.StringIO()
-    unittest.main()
-    func(sys.stdout.getvalue())
+
+suite = unittest.TestLoader().loadTestsFromModule(__main__)
+old_stdout = sys.stdout
+new_stdout = io.StringIO()
+sys.stdout = new_stdout
+unittest.TextTestRunner(stream=new_stdout).run(suite)
+output = new_stdout.getvalue()
+sys.stdout = old_stdout
+func('aa'+output)
 

@@ -11,9 +11,9 @@
     "react-ace": "^10.1.0",
     "react-bootstrap": "^2.4.0",
     "react-dom": "^17.0.1",
-    "react-scripts": "4.0.1",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^0.2.4",
-    "yarn": "^1.22.18"
+    "yarn": "^1.22.19"
   },
   "scripts": {
     "start": "react-scripts start",
