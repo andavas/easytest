@@ -1,0 +1,11 @@
+#pyodideOutputContainer {
+    display: flex;
+    flex-flow: column wrap;
+    margin: 20px 30%;
+    height: 200px;
+    width: 500px;
+    border: 2px solid gray;
+    border-radius: 6px;
+    text-align: left;
+    font: bold 11pt 'Courier New', Courier, monospace;
+}

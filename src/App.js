@@ -1,35 +1,34 @@
-import React from 'react'
-import script from './python/main.py';
-import script2 from './python/main2.py';
-import logo from './logo.svg';
-import PyComp from './components/PyComp';
-import AceEditor from 'react-ace';
+import React from "react";
+import script from "./python/main.py";
+import script2 from "./python/main2.py";
+import logo from "./logo.svg";
+import PyComp from "./components/PyComp";
 
-import "ace-builds/src-noconflict/mode-python";
-import "ace-builds/src-noconflict/theme-dracula"
-import "ace-builds/src-noconflict/ext-language_tools"
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-
-import { Button, Spinner } from 'react-bootstrap';
+import { Spinner } from "react-bootstrap";
+import Editor from "./components/Editor";
 
 const App = () => {
-  const [editorcode, setEditorCode] = React.useState(String.raw`def sum(a, b):
+  const [maincode, setEditorMain] = React.useState(String.raw`def sum(a, b):
   return (a + b)
 
 a, b = 5, 7
 #a = int(input('Enter 1st number: '))
 #c = int(input('Enter 2nd number: '))
 
-
-
 def func(content):
   return content
 
-func(f'Soma de {a} e {b} é {sum(a, b)}')`)
+func(f'Soma de {a} e {b} é {sum(a, b)}')
 
-const [ testcode, setEditorTest ] = React.useState(String.raw`
+
+
+
+`);
+
+  const [testcode, setEditorTest] = React.useState(String.raw`
 def soma(a, b):
     return (a + b)
 
@@ -78,69 +77,60 @@ output = new_stdout.getvalue()
 sys.stdout = old_stdout
 func(f'{output}')
 
-`)
+`);
 
-  const [code, setCode] = React.useState(editorcode);
-  const [isPyodideLoading, setIsPyodideLoading] = React.useState(false)
-
+  const [code, setCode] = React.useState(`
+  def func(content):
+    return content
   
-  const handleReloadClick = async () => {
-    // setReload(!reload)
-    // reload ? setCode(script) : setCode(script2) 
-    setCode(testcode)
-  }
+  func(f'EasyTest!')
+    `);
+  const [isPyodideLoaded, setIsPyodideLoading] = React.useState(false);
 
-  const handleEditCode = (value) => {
-    setEditorCode(value);
-  }
+  const handleMainClick = async () => {
+    setCode(maincode);
+  };
+  const handleTestClick = async () => {
+    setCode(testcode);
+  };
 
-  const handleEditTest = (value) => {
-    setEditorTest(value);
-  }
+
 
   const handlePyodideLoad = (value) => {
-    setIsPyodideLoading(value)
-  }
+    setIsPyodideLoading(value);
+  };
 
   return (
     <div className="App">
-      <header className="App-header">
-        <AceEditor
-          mode="python"
-          theme="dracula"
-          height='300px'
-          onChange={handleEditCode}
-          value={editorcode}
-          name="codeEditor"
-          editorProps={{ $blockScrolling: true }}
-          setOptions={{
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            enableSnippets: true,
-            fontSize: '12pt'
-          }}
+      <div id="AppEditors">
+        <Editor
+          code={maincode}
+          handleCode={setEditorMain}
+          isButtonDisabled={!isPyodideLoaded}
+          handleButtonClick={handleMainClick}
+          buttonText={"Rodar Código"}
         />
-        <AceEditor
-          mode="python"
-          theme="dracula"
-          height='300px'
-          onChange={handleEditTest}
-          value={testcode}
-          name="testEditor"
-          editorProps={{ $blockScrolling: true }}
-          setOptions={{
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true,
-            enableSnippets: true,
-            fontSize: '12pt'
-          }}
+        <Editor
+          code={testcode}
+          handleCode={setEditorTest}
+          isButtonDisabled={!isPyodideLoaded}
+          handleButtonClick={handleTestClick}
+          buttonText={"Rodar Teste"}
         />
-        <PyComp code={code} handlePyodideLoad={handlePyodideLoad}/>
-        {!isPyodideLoading ? <Spinner style={{margin: '0 0 10px 0'}} animation="border" variant="info" /> : <></>}
-        <Button variant="primary" disabled={!isPyodideLoading} onClick={handleReloadClick}>Reload</Button>
-      </header>
+      </div>
+
+      {!isPyodideLoaded ? (
+        <Spinner
+          style={{ margin: "0 0 10px 0" }}
+          animation="border"
+          variant="info"
+        />
+      ) : (
+        <div style={{ margin: "0 0 42px 0" }}></div>
+      )}
+      <PyComp code={code} handlePyodideLoad={handlePyodideLoad} />
     </div>
   );
-}
+};
 
 export default App;

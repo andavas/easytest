@@ -1,0 +1,7 @@
+.editor {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    margin: 0 20px;
+}
