@@ -10,6 +10,14 @@
   color: white;
 }
 
+#desafioInfo {
+  display: flex;
+  flex-flow: row wrap;
+  width: 100%;
+  justify-content: space-evenly;
+  margin: 20px 0;
+}
+
 #AppEditors {
   display: flex;
   flex-flow: row nowrap;

@@ -6,6 +6,7 @@ import "./Desafio.css";
 
 import { Spinner } from "react-bootstrap";
 import Editor from "../../components/Editor";
+import { useLocation } from "react-router-dom";
 
 const codePreamble = `
 import sys, io
@@ -16,7 +17,6 @@ def print(content):
   return content
 
 `
-
 const codeEpilogue = `
 suite = unittest.TestLoader().loadTestsFromModule(__main__)
 old_stdout = sys.stdout
@@ -28,46 +28,12 @@ sys.stdout = old_stdout
 print(f'{output}')
 `
 
-export default function Desafio(props)  {
+export default function Desafio()  {
 
-console.log(props)
+  const { state } = useLocation();
 
-  const [maincode, setEditorMain] = React.useState(`
-def soma(a, b):
-  return (a + b)
-
-a, b = 5, 7
-#a = int(input('Enter 1st number: '))
-#c = int(input('Enter 2nd number: '))
-
-print(f'Soma de {a} e {b} é {soma(a, b)}')
-
-`);
-
-  const [testcode, setEditorTest] = React.useState(`
-class TestSum(unittest.TestCase):
-    def test_list_int(self):
-        """
-        Testa se consegue somar dois números positivos
-        """
-        a, b = 2, 5
-        result = soma(a,b)
-        self.assertEqual(result, 7)
-
-    def test_list_neg_int(self):
-        """
-        Testa se consegue somar dois números negativos
-        """
-        a,b = -2, -8
-        result = soma(a,b)
-        self.assertEqual(result, -10)
-
-    def test_bad_type(self):
-        a,b = 'banana', 3
-        with self.assertRaises(TypeError):
-            result = soma(a,b)
-
-`);
+  const [maincode, setEditorMain] = React.useState(state.desafio.code);
+  const [testcode, setEditorTest] = React.useState(state.desafio.test);
 
   const [code, setCode] = React.useState(`
   def func(content):
@@ -90,6 +56,13 @@ class TestSum(unittest.TestCase):
 
   return (
     <div className="desafio">
+      <div id="desafioInfo">
+        <div>{state.desafio.nome}</div>
+        <div>{state.desafio.dificuldade}</div>
+        <div>Pontos: {state.desafio.pontuacao}</div>
+        <div>Reloads: {state.desafio.reloads}</div>
+        <div>{state.desafio.tempo}</div>
+      </div>
       <div id="AppEditors">
         <Editor
           code={maincode}
@@ -106,7 +79,6 @@ class TestSum(unittest.TestCase):
           buttonText={"Rodar Teste"}
         />
       </div>
-
       {!isPyodideLoaded ? (
         <Spinner
           style={{ margin: "0 0 10px 0" }}
