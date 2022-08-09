@@ -1,5 +1,6 @@
 import React from "react";
 import PyComp from "../../components/PyComp";
+import dedent from "dedent-js";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Desafio.css";
@@ -43,10 +44,10 @@ export default function Desafio()  {
   const [isPyodideLoaded, setIsPyodideLoading] = React.useState(false);
 
   const handleMainClick = async () => {
-    setCode(codePreamble+maincode); // problema de indentação (ver dedent-js)
+    setCode(codePreamble+dedent(maincode)); // problema de indentação (ver dedent-js)
   };
   const handleTestClick = async () => {
-    setCode(codePreamble+maincode+testcode+codeEpilogue);
+    setCode(codePreamble+dedent(maincode+testcode+codeEpilogue));
   };
 
   const handlePyodideLoad = (value) => {
