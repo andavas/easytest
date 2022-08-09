@@ -1,8 +1,7 @@
-import { Card } from 'antd';
+import { Button, Card, CardActionArea, CardActions, CardContent, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './App.css'
-import Desafio from './pages/Desafio';
 
 const desafio1 = {
   nome: 'Código com erro',
@@ -13,12 +12,12 @@ const desafio1 = {
   code: `
   def soma(a, b):
     return (a + b)
-  
-  a, b = 5, 7
-  #a = int(input('Enter 1st number: '))
-  #c = int(input('Enter 2nd number: '))
-  
-  print(f'Soma de {a} e {b} é {soma(a, b)}')
+
+a, b = 5, 7
+#a = int(input('Enter 1st number: '))
+#c = int(input('Enter 2nd number: '))
+
+print(f'Soma de {a} e {b} é {soma(a, b)}')
   `,
   test: `
   class TestSum(unittest.TestCase):
@@ -53,15 +52,32 @@ export default function App() {
 
 
     return ( <div className='App'>
-        <Card title={desafio1.nome} bordered={true} onClick={handleChallengeSelect}>
+
+    <Card>
+      <CardContent>
+        <Typography>
+        {desafio1.dificuldade}
+        </Typography>
+        <Typography>
+        Sua pontuação: {desafio1.pontuacao}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button onClick={handleChallengeSelect}>
+          Jogar
+        </Button>
+      </CardActions>
+    </Card>
+
+        {/* <Card title={desafio1.nome} bordered={true} onClick={handleChallengeSelect}>
           <p><br/></p>
           <p>
-            {desafio1.dificuldade}
+            
           </p>
           <p>
-            Sua pontuação: {desafio1.pontuacao}
+            
           </p>
-        </Card>
+        </Card> */}
     </div>
     );
 }
