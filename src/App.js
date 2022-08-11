@@ -1,14 +1,8 @@
-import {
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  Typography,
-} from "@mui/material";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import "./App.css";
+import ListaDesafios from "./components/Desafios";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 const desafios = [
   {
@@ -53,7 +47,7 @@ const desafios = [
   {
     nome: "Teste com erro",
     dificuldade: "Fácil",
-    pontuacao: 0,
+    pontuacao: 1,
     tempo: 0,
     reloads: 0,
     code: `
@@ -92,26 +86,15 @@ const desafios = [
 ];
 
 export default function App() {
-  const navigate = useNavigate();
-
-  const handleChallengeSelect = (desafio) => {
-    console.log(desafio);
-    navigate("/desafio", { state: { desafio:desafio } });
-  };
 
   return (
     <div className="App">
-      {desafios.map((desafio) => (
-        <Card>
-          <CardContent>
-            <Typography>{desafio.dificuldade}</Typography>
-            <Typography>Sua pontuação: {desafio.pontuacao}</Typography>
-          </CardContent>
-          <CardActions>
-            <Button onClick={handleChallengeSelect(desafio)}>Jogar</Button>
-          </CardActions>
-        </Card>
-      ))}
+      <Header/>
+      <div>
+        Testes
+      </div>
+      <ListaDesafios desafios={desafios}/>
+      <Footer/>
     </div>
   );
 }
