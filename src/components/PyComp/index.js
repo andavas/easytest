@@ -27,8 +27,10 @@ const PyComp = (props) => {
       else { // depois da primeira execução o setPyodide já rodou
         const out = pyodide.runPython(script);
         setOutput(out);
+        console.log(script)
       }
   }, [props.code]);
+
 
   return(<div id='pyodideOutputContainer'>
     {output}

@@ -1,5 +1,6 @@
 import React from "react";
 import PyComp from "../../components/PyComp";
+import dedent from "dedent-js";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Desafio.css";
@@ -15,7 +16,6 @@ import __main__
 
 def print(content):
   return content
-
 `
 const codeEpilogue = `
 suite = unittest.TestLoader().loadTestsFromModule(__main__)
@@ -36,18 +36,18 @@ export default function Desafio()  {
   const [testcode, setEditorTest] = React.useState(state.desafio.test);
 
   const [code, setCode] = React.useState(`
-  def func(content):
+  def print(content):
     return content
   
-  func(f'EasyTest!')
+  print(f'EasyTest!')
     `);
   const [isPyodideLoaded, setIsPyodideLoading] = React.useState(false);
 
   const handleMainClick = async () => {
-    setCode(codePreamble+maincode);
+    setCode(codePreamble+dedent(maincode)); // problema de indentação (ver dedent-js)
   };
   const handleTestClick = async () => {
-    setCode(codePreamble+maincode+testcode+codeEpilogue);
+    setCode(codePreamble+dedent(maincode+testcode+codeEpilogue));
   };
 
   const handlePyodideLoad = (value) => {

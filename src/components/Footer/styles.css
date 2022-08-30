@@ -1,0 +1,11 @@
+#footerContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    background: linear-gradient(180deg, #282c34 65%, #425680 94%);
+    height: 80px;
+    width: 100vw;
+}

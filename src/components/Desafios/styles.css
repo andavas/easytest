@@ -1,0 +1,16 @@
+#desafiosContainer {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.desafioItem {
+    min-width: 160px;
+    margin: 10px;
+}
+
+.desafioButtons {
+    display: flex;
+    justify-content: center;
+}
