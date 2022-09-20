@@ -3,6 +3,10 @@ import "./App.css";
 import ListaDesafios from "./components/Desafios";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { LineAxisOutlined } from "@mui/icons-material";
+import axios from "axios";
+import { useAuthContext } from "./context/authContext";
+import { useNavigate } from "react-router-dom";
 
 const desafios = [
   {
@@ -86,6 +90,27 @@ const desafios = [
 ];
 
 export default function App() {
+  // const api = 'http://localhost:4000/api/challenges'
+  // React.useEffect(() => {
+  //   axios.get(api,{
+  //     headers:{
+  //       Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuZGVzb25iQG1haWwuY29tIiwiaWF0IjoxNjYzMjA4MjYyLCJleHAiOjE2NjMyMTE4NjJ9.R29qqUrxUkfPECYB8UsYkCW70k3zYwG7dGf65UR0TEc'
+  //     }
+  //   }).then(response => console.log(response.data))
+  // },[])
+
+  const {token} = useAuthContext();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (token === null) {
+      navigate("/login");
+    }
+  }, [token]); 
+
+  if (!token) {
+    return <></>;
+  }
 
   return (
     <div className="App">

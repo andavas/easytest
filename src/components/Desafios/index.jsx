@@ -23,7 +23,6 @@ const ListaDesafios = (props) => {
           <CardContent>
             <Typography>{desafio.nome}</Typography>
             <Typography>{desafio.dificuldade}</Typography>
-            <Typography>{desafio.pontuacao ? (desafio.pontuacao) : ('Não jogou')}</Typography>
           </CardContent>
           <CardActions className="desafioButtons">
             <Button onClick={() => handleChallengeSelect(desafio)}>
