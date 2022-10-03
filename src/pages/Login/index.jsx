@@ -9,31 +9,28 @@ import "./styles.css";
 
 const Login = () => {
   const baseApi = "http://localhost:4000";
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [inputStatus, setInputStatus] = React.useState("");
   const { clearToken, saveToken } = useAuthContext();
 
   const handleLogin = () => {
+    setInputStatus("");
     setLoading(true);
-    clearToken()
+    clearToken();
     axios
       .post(baseApi + "/api/auth/login", {
-        data: {
-          email,
-          password,
-        },
+        email,
+        password,
       })
       .then((response) => {
-        console.log(response)
-        if (response.status === 201){
-            saveToken(response.data.access_token);
-            navigate('/')
-        } else {
-
-        }
-        
+        saveToken(response.data.access_token);
+        navigate("/");
+      }).catch(err => {
+        setInputStatus("error")
+        setLoading(false)
       });
   };
 
@@ -45,12 +42,14 @@ const Login = () => {
           placeholder="Email"
           disabled={loading}
           value={email}
+          status={inputStatus}
           onChange={(event) => setEmail(event.target.value)}
         />
         <Input.Password
           placeholder="Senha"
           disabled={loading}
           value={password}
+          status={inputStatus}
           onChange={(event) => setPassword(event.target.value)}
         />
         <Button type="primary" loading={loading} onClick={handleLogin}>

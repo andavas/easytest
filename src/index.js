@@ -1,15 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import AppRoutes from "./routes/routes";
-import { GlobalProvider } from "./context/authContext";
+import { AuthProvider } from "./context/authContext";
 import "./index.css";
 import 'antd/dist/antd.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <GlobalProvider>
+    <AuthProvider>
       <AppRoutes />
-    </GlobalProvider>
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

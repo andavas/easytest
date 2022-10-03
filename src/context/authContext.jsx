@@ -2,14 +2,21 @@ import React from "react";
 
 const AuthContext = React.createContext({});
 
-export function GlobalProvider({ children }) {
-  const [token, setToken] = React.useState('');
+export function AuthProvider({ children }) {
+  const [token, setToken] = React.useState(null);
+  const [loadingToken, setLoadingToken] = React.useState(true)
+
 
   React.useEffect(() => {
-    const storedToken = JSON.parse(localStorage.getItem("token"));
-
-    setToken(storedToken);
+    const rawtoken = localStorage.getItem("token");
+    if (rawtoken) {
+      const storedToken = JSON.parse(rawtoken);
+      setToken(storedToken);
+    }
+    setLoadingToken(false);
   }, []);
+
+
 
   function saveToken(token) {
     localStorage.setItem("token", JSON.stringify(token));
@@ -17,13 +24,12 @@ export function GlobalProvider({ children }) {
   }
 
   function clearToken() {
-    localStorage.setItem("token", '');
-    setToken('');
+    localStorage.setItem("token", "");
+    setToken("");
   }
 
-
   return (
-    <AuthContext.Provider value={{ token, saveToken, clearToken }} >
+    <AuthContext.Provider value={{ token, loadingToken, saveToken, clearToken }}>
       {children}
     </AuthContext.Provider>
   );

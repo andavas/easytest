@@ -99,14 +99,16 @@ export default function App() {
   //   }).then(response => console.log(response.data))
   // },[])
 
-  const {token} = useAuthContext();
+  const {loadingToken, token} = useAuthContext();
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (token === null) {
-      navigate("/login");
+    if (!loadingToken) {
+      if (token === null) {
+        navigate("/login");
+      }
     }
-  }, [token]); 
+  }, []); 
 
   if (!token) {
     return <></>;
