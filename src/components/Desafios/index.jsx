@@ -16,6 +16,7 @@ const ListaDesafios = (props) => {
     navigate("/desafio", { state: { desafio } });
   };
 
+
   return (
     <div id="desafiosContainer">
       {props.desafios.map((desafio) => (
