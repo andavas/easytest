@@ -1,11 +1,11 @@
 #headerContainer {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     position: absolute;
     top: 0;
-    background: linear-gradient(180deg, #425680 12%, #282c34 94%);
+    background: #358AEE;
     height: 80px;
     width: 100vw;
 }
@@ -15,11 +15,24 @@
     flex:1;
     margin: 0 20px;
     max-width: 140px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#imgLogo:hover {
+    background-color: #fff3;
+    transition: background-color 0.8s ease;
+}
+
+#imgLogo:not(:hover) {
+    background-color: transparent;
+    transition: background-color 0.8s ease;
 }
 
 #chipUser {
     color:white;
     background: #fff3;
+    margin: 20px 40px
 }
 
 #dummy {

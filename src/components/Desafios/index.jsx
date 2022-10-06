@@ -20,7 +20,7 @@ const ListaDesafios = (props) => {
   return (
     <div id="desafiosContainer">
       {props.desafios.map((desafio) => (
-        <Card key={desafio.nome} className='desafioItem'>
+        <Card key={desafio.nome} style={{background: '#ddd'}} className='desafioItem'>
           <CardContent>
             <Typography>{desafio.nome}</Typography>
             <Typography>{desafio.dificuldade}</Typography>

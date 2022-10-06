@@ -8,6 +8,7 @@ import "./Desafio.css";
 import { Spinner } from "react-bootstrap";
 import Editor from "../../components/Editor";
 import { useLocation } from "react-router-dom";
+import Header from "../../components/Header";
 
 const codePreamble = `
 import sys, io
@@ -16,7 +17,7 @@ import __main__
 
 def print(content):
   return content
-`
+`;
 const codeEpilogue = `
 suite = unittest.TestLoader().loadTestsFromModule(__main__)
 old_stdout = sys.stdout
@@ -26,10 +27,9 @@ unittest.TextTestRunner(stream=new_stdout).run(suite)
 output = new_stdout.getvalue()
 sys.stdout = old_stdout
 print(f'{output}')
-`
+`;
 
-export default function Desafio()  {
-
+export default function Desafio() {
   const { state } = useLocation();
 
   const [maincode, setEditorMain] = React.useState(state.desafio.code);
@@ -44,10 +44,10 @@ export default function Desafio()  {
   const [isPyodideLoaded, setIsPyodideLoading] = React.useState(false);
 
   const handleMainClick = async () => {
-    setCode(codePreamble+dedent(maincode)); // problema de indentação (ver dedent-js)
+    setCode(codePreamble + dedent(maincode)); // problema de indentação (ver dedent-js)
   };
   const handleTestClick = async () => {
-    setCode(codePreamble+dedent(maincode+testcode+codeEpilogue));
+    setCode(codePreamble + dedent(maincode + testcode + codeEpilogue));
   };
 
   const handlePyodideLoad = (value) => {
@@ -55,40 +55,43 @@ export default function Desafio()  {
   };
 
   return (
-    <div className="desafio">
-      <div id="desafioInfo">
-        <div>{state.desafio.nome}</div>
-        <div>{state.desafio.dificuldade}</div>
-        <div>Pontos: {state.desafio.pontuacao}</div>
-        <div>Reloads: {state.desafio.reloads}</div>
-        <div>{state.desafio.tempo}</div>
+    <>
+      <Header />
+      <div className="desafio">
+        <div id="desafioInfo">
+          <div>{state.desafio.nome}</div>
+          <div>{state.desafio.dificuldade}</div>
+          <div>Pontos: {state.desafio.pontuacao}</div>
+          <div>Reloads: {state.desafio.reloads}</div>
+          <div>{state.desafio.tempo}</div>
+        </div>
+        <div id="AppEditors">
+          <Editor
+            code={maincode}
+            handleCode={setEditorMain}
+            isButtonDisabled={!isPyodideLoaded}
+            handleButtonClick={handleMainClick}
+            buttonText={"Rodar Código"}
+          />
+          <Editor
+            code={testcode}
+            handleCode={setEditorTest}
+            isButtonDisabled={!isPyodideLoaded}
+            handleButtonClick={handleTestClick}
+            buttonText={"Rodar Teste"}
+          />
+        </div>
+        {!isPyodideLoaded ? (
+          <Spinner
+            style={{ margin: "0 0 10px 0" }}
+            animation="border"
+            variant="info"
+          />
+        ) : (
+          <div style={{ margin: "0 0 42px 0" }}></div>
+        )}
+        <PyComp code={code} handlePyodideLoad={handlePyodideLoad} />
       </div>
-      <div id="AppEditors">
-        <Editor
-          code={maincode}
-          handleCode={setEditorMain}
-          isButtonDisabled={!isPyodideLoaded}
-          handleButtonClick={handleMainClick}
-          buttonText={"Rodar Código"}
-        />
-        <Editor
-          code={testcode}
-          handleCode={setEditorTest}
-          isButtonDisabled={!isPyodideLoaded}
-          handleButtonClick={handleTestClick}
-          buttonText={"Rodar Teste"}
-        />
-      </div>
-      {!isPyodideLoaded ? (
-        <Spinner
-          style={{ margin: "0 0 10px 0" }}
-          animation="border"
-          variant="info"
-        />
-      ) : (
-        <div style={{ margin: "0 0 42px 0" }}></div>
-      )}
-      <PyComp code={code} handlePyodideLoad={handlePyodideLoad} />
-    </div>
+    </>
   );
-};
+}
