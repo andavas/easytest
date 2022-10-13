@@ -1,8 +1,7 @@
-import { Button, Input } from "antd";
+import { Button, Input, message } from "antd";
 import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { useAuthContext } from "../../context/authContext";
 import "./styles.css";
@@ -14,24 +13,34 @@ const Login = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [inputStatus, setInputStatus] = React.useState("");
-  const { clearToken, saveToken } = useAuthContext();
+  const { clearToken, saveToken, clearUserInfo, saveUserInfo } = useAuthContext();
 
   const handleLogin = () => {
-    setInputStatus("");
-    setLoading(true);
-    clearToken();
-    axios
-      .post(baseApi + "/api/auth/login", {
-        email,
-        password,
-      })
-      .then((response) => {
-        saveToken(response.data.access_token);
-        navigate("/");
-      }).catch(err => {
-        setInputStatus("error")
-        setLoading(false)
-      });
+    if (email === "" || password === "") {
+      setInputStatus("error");
+      message.error("Preencha todos os campos");
+    } else {
+      setInputStatus("");
+      setLoading(true);
+      clearToken();
+      clearUserInfo();
+      axios
+        .post(baseApi + "/api/auth/login", {
+          email,
+          password,
+        })
+        .then((response) => {
+          const {access_token, ...user} = response.data
+          saveUserInfo(user);
+          saveToken(access_token);
+          navigate("/");
+        })
+        .catch((err) => {
+          setInputStatus("error");
+          setLoading(false);
+          message.error(err.response.data.msg);
+        });
+    }
   };
 
   return (
@@ -56,7 +65,6 @@ const Login = () => {
           Entrar
         </Button>
       </div>
-      <Footer />
     </div>
   );
 };

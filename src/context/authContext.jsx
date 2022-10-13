@@ -2,10 +2,17 @@ import React from "react";
 
 const AuthContext = React.createContext({});
 
+/*
+userinfo: {
+  id: string,
+  name: string,
+  email: string,
+ */
+
 export function AuthProvider({ children }) {
   const [token, setToken] = React.useState(null);
-  const [loadingToken, setLoadingToken] = React.useState(true)
-
+  const [loadingToken, setLoadingToken] = React.useState(true);
+  const [userInfo, setUserInfo] = React.useState({});
 
   React.useEffect(() => {
     const rawtoken = localStorage.getItem("token");
@@ -13,10 +20,13 @@ export function AuthProvider({ children }) {
       const storedToken = JSON.parse(rawtoken);
       setToken(storedToken);
     }
+    const rawuserinfo = localStorage.getItem("userInfo");
+    if (rawuserinfo) {
+      const storedUserinfo = JSON.parse(rawuserinfo);
+      setUserInfo(storedUserinfo);
+    }
     setLoadingToken(false);
   }, []);
-
-
 
   function saveToken(token) {
     localStorage.setItem("token", JSON.stringify(token));
@@ -28,8 +38,28 @@ export function AuthProvider({ children }) {
     setToken("");
   }
 
+  function saveUserInfo(userInfo) {
+    localStorage.setItem("userInfo", JSON.stringify(userInfo));
+    setToken(userInfo);
+  }
+
+  function clearUserInfo() {
+    localStorage.setItem("userInfo", "");
+    setToken("");
+  }
+
   return (
-    <AuthContext.Provider value={{ token, loadingToken, saveToken, clearToken }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        loadingToken,
+        userInfo,
+        saveUserInfo,
+        clearUserInfo,
+        saveToken,
+        clearToken,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
