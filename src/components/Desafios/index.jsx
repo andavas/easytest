@@ -28,7 +28,7 @@ const ListaDesafios = (props) => {
       })
       .then((response) => {
         desafio["gameID"] = response.data.id;
-        navigate("/desafio", { state: { desafio } });
+        navigate("/desafio", { state: { desafio }, replace : true });
       })
       .catch((err) => {
         console.log(err);

@@ -22,9 +22,6 @@ export default function App() {
         id: desafio.id,
         nome: desafio.name,
         dificuldade: desafio.dificulty === 0 ? "Fácil" : desafio.dificulty === 1 ? "Médio" : "Difícil",
-        pontuacao: desafio.score,
-        tempo: desafio.time,
-        reloads: desafio.reloads,
         code: desafio.code,
         test: desafio.test,
       });
