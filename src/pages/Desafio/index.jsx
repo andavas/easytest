@@ -187,7 +187,7 @@ export default function Desafio() {
         >
           <Button
             type="primary"
-            variant="success"
+            variant="outline-success"
           >
             Finalizar
           </Button>

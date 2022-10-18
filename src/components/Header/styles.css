@@ -39,3 +39,8 @@
     display: flex;
     flex: 2
 }
+
+.dropDownText {
+    display: flex;
+    flex-flow: column wrap;
+}
