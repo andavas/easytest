@@ -3,7 +3,7 @@ import PyComp from "../../components/PyComp";
 import dedent from "dedent-js";
 import { Spinner } from "react-bootstrap";
 import Editor from "../../components/Editor";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { Button } from "react-bootstrap";
 import axios from "axios";
@@ -12,6 +12,8 @@ import { useAuthContext } from "../../context/authContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Desafio.css";
 import { message, Popconfirm } from "antd";
+import { Modal, Typography } from "@mui/material";
+import { Box } from "@mui/system";
 
 const codePreamble = `
 import sys, io
@@ -36,6 +38,7 @@ print(f'{output}')
 export default function Desafio() {
   // env constants
   const baseApi = "http://localhost:4000";
+  const navigate = useNavigate();
   const { state } = useLocation();
   const { token } = useAuthContext();
 
@@ -51,12 +54,15 @@ export default function Desafio() {
   const [loadingClearCode, setLoadingClearCode] = React.useState(false);
   const [openConfirm, setOpenConfirm] = React.useState(false);
   const [confirmLoading, setConfirmLoading] = React.useState(false);
+  const [openModal, setOpenModal] = React.useState(false);
 
   //code vars
   const [maincode, setEditorMain] = React.useState(state.desafio.code);
   const [testcode, setEditorTest] = React.useState(state.desafio.test);
 
   //game state vars
+  const [score, setScore] = React.useState(0);
+  const [finishedAt, setFinishedAt] = React.useState(null);
   const [reloads, setReloads] = React.useState(0);
 
   //pyodide vars
@@ -68,6 +74,9 @@ export default function Desafio() {
   };
   const handleTestClick = async () => {
     setCode(codePreamble + dedent(maincode + testcode + codeEpilogue));
+  };
+  const handleOkModal = () => {
+    navigate("/");
   };
 
   // pyodide functions
@@ -84,9 +93,11 @@ export default function Desafio() {
       })
       .then((response) => {
         const startedAt = new Date(response.data.createdAt);
-        const finishedAt = new Date();
-        const score = ((finishedAt - startedAt) / 1000) * (1 + reloads / 10);
-        return 0;
+        const finshed = new Date();
+        setFinishedAt(finshed);
+        setScore(
+          Math.floor((finshed - startedAt) / 1000 * (1 + reloads / 10))
+        );
       });
   };
 
@@ -106,12 +117,14 @@ export default function Desafio() {
   const handleSubmitChallenge = () => {
     if (checkOutput()) {
       setConfirmLoading(true);
+      calculateScore();
       axios
         .put(
-          baseApi + "/api/games",
+          baseApi + "/api/games/" + state.desafio.gameID,
           {
-            id: state.desafio.gameID,
-            score: calculateScore(),
+            score,
+            finishedAt,
+            reloads,
           },
           {
             headers: {
@@ -120,13 +133,14 @@ export default function Desafio() {
           }
         )
         .then((response) => {
-          console.log("submit - " + response.data);
           message.success("Desafio finalizado com sucesso!");
-        }).catch((error) => {
+          setOpenModal(true);
+        })
+        .catch((error) => {
           message.error("Erro ao finalizar desafio!");
         });
-        setOpenConfirm(false);
-        setConfirmLoading(false);
+      setOpenConfirm(false);
+      setConfirmLoading(false);
     }
   };
 
@@ -148,6 +162,25 @@ export default function Desafio() {
       });
     setLoadingClearCode(false);
   };
+
+  // style vars
+  const style = {
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    justifyContent: 'center',
+    textAlign: 'center',
+    gap: '10px',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'white',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+  
 
   return (
     <>
@@ -178,17 +211,29 @@ export default function Desafio() {
             buttonText={"Rodar Teste"}
           />
         </div>
+        <Modal open={openModal}>
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Desafio Finalizado!
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mb: 2 }}>
+            Você fez {score} pontos!
+          </Typography>
+          <Button type="primary" onClick={handleOkModal} variant="outline-success">
+            Fechar
+          </Button>
+        </Box>
+        </Modal>
         <Popconfirm
           title="Tem certeza que quer finalizar o desafio?"
           open={openConfirm}
+          okText="Sim"
+          cancelText="Não"
           onConfirm={handleSubmitChallenge}
           okButtonProps={{ loading: confirmLoading }}
           onCancel={() => setOpenConfirm(false)}
         >
-          <Button
-            type="primary"
-            variant="outline-success"
-          >
+          <Button type="primary" variant="outline-success">
             Finalizar
           </Button>
         </Popconfirm>
