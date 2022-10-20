@@ -9,7 +9,7 @@ import { CircularProgress } from "@mui/material";
 
 export default function App() {
   const baseApi = "http://localhost:4000";
-  const { loadingToken, token } = useAuthContext();
+  const { loadingToken, token, clearToken, clearUserInfo } = useAuthContext();
   const navigate = useNavigate();
 
   const [loading, setLoading] = React.useState(false);
@@ -21,7 +21,12 @@ export default function App() {
       elementos.push({
         id: desafio.id,
         nome: desafio.name,
-        dificuldade: desafio.dificulty === 0 ? "Fácil" : desafio.dificulty === 1 ? "Médio" : "Difícil",
+        dificuldade:
+          desafio.dificulty === 0
+            ? "Fácil"
+            : desafio.dificulty === 1
+            ? "Médio"
+            : "Difícil",
         code: desafio.code,
         test: desafio.test,
       });
@@ -44,9 +49,13 @@ export default function App() {
             setDesafio(remapDesafio(response.data));
           })
           .catch((err) => {
-            err.response.data.statusCode === 401
-              ? navigate("/login")
-              : console.log(err);
+            if (err.response.data.statusCode === 401) {
+              navigate("/login");
+              clearToken();
+              clearUserInfo()
+            } else {
+              console.log(err);
+            }
           });
       }
     }
@@ -65,7 +74,7 @@ export default function App() {
           <ListaDesafios desafios={desafio} />
         </div>
       ) : (
-        <CircularProgress/>
+        <CircularProgress />
       )}
     </div>
   );

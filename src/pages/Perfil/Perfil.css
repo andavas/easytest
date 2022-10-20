@@ -1,0 +1,21 @@
+#profileContainer {
+    display: flex;
+    flex-flow: column nowrap;
+    text-align: center;
+    justify-content: center;
+    gap: 25px;
+    margin: 70px 0 0 0;
+    min-height: 100vh;
+}
+#profileInfo {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 10px;
+}
+
+#profileTitle {
+    font-size: 22pt;
+    color: #000000;
+}

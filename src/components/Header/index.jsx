@@ -40,6 +40,9 @@ const Header = () => {
         }
       ]}
       onClick={({ key }) => {
+        if (key === "1") {
+          navigate("/perfil");
+        }
         if (key === "2") {
           handleLogout();
         }
