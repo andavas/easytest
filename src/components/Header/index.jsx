@@ -26,12 +26,20 @@ const Header = () => {
           key: "1",
           label: (
             <Typography.Text>
-              Perfil
+              Resultados
             </Typography.Text>
           ),
         },
         {
           key: "2",
+          label: (
+            <Typography.Text>
+              Perfil
+            </Typography.Text>
+          ),
+        },
+        {
+          key: "3",
           label: (
             <Typography.Text>
               Sair
@@ -41,9 +49,12 @@ const Header = () => {
       ]}
       onClick={({ key }) => {
         if (key === "1") {
+          navigate("/resultados");
+        }
+        else if (key === "2") {
           navigate("/perfil");
         }
-        if (key === "2") {
+        else if (key === "3") {
           handleLogout();
         }
       }}
