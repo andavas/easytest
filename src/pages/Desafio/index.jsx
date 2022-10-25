@@ -62,7 +62,6 @@ export default function Desafio() {
 
   //game state vars
   const [score, setScore] = React.useState(0);
-  const [finishedAt, setFinishedAt] = React.useState(null);
   const [reloads, setReloads] = React.useState(0);
 
   //pyodide vars
@@ -84,8 +83,9 @@ export default function Desafio() {
     setIsPyodideLoading(value);
   };
 
-  const calculateScore = () => {
-    axios
+  const calculateScore = async () => {
+    const finishedAt = new Date();
+    const pontos = await axios
       .get(baseApi + "/api/games/" + state.desafio.gameID, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -93,12 +93,17 @@ export default function Desafio() {
       })
       .then((response) => {
         const startedAt = new Date(response.data.createdAt);
-        const finshed = new Date();
-        setFinishedAt(finshed);
-        setScore(
-          Math.floor((finshed - startedAt) / 1000 * (1 + reloads / 10))
+        console.log(state.desafio);
+        const pts = Math.floor(
+          isError
+            ? 0
+            : (state.desafio.dificuldade + 1) * 10000 -
+                ((finishedAt - startedAt) / 1000) * (1 + reloads / 10)
         );
+        setScore(pts);
+        return pts
       });
+      return {pontos, finishedAt}
   };
 
   const checkOutput = () => {
@@ -112,18 +117,19 @@ export default function Desafio() {
       setOpenConfirm(true);
       return true;
     }
+    return true;
   };
 
-  const handleSubmitChallenge = () => {
+  const handleSubmitChallenge = async () => {
     if (checkOutput()) {
       setConfirmLoading(true);
-      calculateScore();
+      const result = await calculateScore();
       axios
         .put(
           baseApi + "/api/games/" + state.desafio.gameID,
           {
-            score,
-            finishedAt,
+            score: result.pontos,
+            finishedAt: result.finishedAt,
             reloads,
           },
           {
@@ -165,22 +171,21 @@ export default function Desafio() {
 
   // style vars
   const style = {
-    display: 'flex',
-    flexFlow: 'column nowrap',
-    justifyContent: 'center',
-    textAlign: 'center',
-    gap: '10px',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    display: "flex",
+    flexFlow: "column nowrap",
+    justifyContent: "center",
+    textAlign: "center",
+    gap: "10px",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     width: 400,
-    bgcolor: 'white',
-    border: '2px solid #000',
+    bgcolor: "white",
+    border: "2px solid #000",
     boxShadow: 24,
     p: 4,
   };
-  
 
   return (
     <>
@@ -212,17 +217,21 @@ export default function Desafio() {
           />
         </div>
         <Modal open={openModal}>
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Desafio Finalizado!
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mb: 2 }}>
-            Você fez {score} pontos!
-          </Typography>
-          <Button type="primary" onClick={handleOkModal} variant="outline-success">
-            Fechar
-          </Button>
-        </Box>
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Desafio Finalizado!
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mb: 2 }}>
+              Você fez {score} pontos!
+            </Typography>
+            <Button
+              type="primary"
+              onClick={handleOkModal}
+              variant="outline-success"
+            >
+              Fechar
+            </Button>
+          </Box>
         </Modal>
         <Popconfirm
           title="Tem certeza que quer finalizar o desafio?"

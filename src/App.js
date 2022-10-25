@@ -20,13 +20,8 @@ export default function App() {
     desafios.forEach((desafio) => {
       elementos.push({
         id: desafio.id,
+        dificuldade: desafio.dificulty,
         nome: desafio.name,
-        dificuldade:
-          desafio.dificulty === 0
-            ? "Fácil"
-            : desafio.dificulty === 1
-            ? "Médio"
-            : "Difícil",
         code: desafio.code,
         test: desafio.test,
       });

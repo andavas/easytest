@@ -10,7 +10,7 @@ import { Spinner } from "react-bootstrap";
 import "./Resultados.css";
 
 const Resultados = (props) => {
-  const { token, loadingToken } = useAuthContext();
+  const { token, loadingToken, userInfo } = useAuthContext();
   const navigate = useNavigate();
   const [desafios, setDesafios] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -44,7 +44,6 @@ const Resultados = (props) => {
                       },
                     })
                     .then((challengeRes) => {
-                      console.log(challengeRes.data);
                       Object.assign(element, {
                         challengeName: challengeRes.data.name,
                         difficulty:
@@ -54,14 +53,14 @@ const Resultados = (props) => {
                             ? "Médio"
                             : "Difícil",
                       });
-                      setDesafios((desafios) => [...desafios, element]);
+                      element.userID === userInfo.id && setDesafios((desafios) => [...desafios, element])
                     });
                 })
                 .catch((gameErr) => {
                   console.log(gameErr);
                 });
             });
-            // axios para cada challengeID | Adicionar campo se foi finalizado com ou sem erros | Adicionar campos para code e test corretos
+            // axios para cada challengeID | Adicionar campo se foi finalizado com ou sem erros |
           })
           .catch((error) => {
             console.log(error);
@@ -110,6 +109,8 @@ const Resultados = (props) => {
             bordered={true}
             dataSource={desafios}
             columns={columns}
+            size="medium"
+            pagination={{defaultPageSize: 5}}
           />
         </div>
       )}

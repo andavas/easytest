@@ -18,17 +18,21 @@ const ListaDesafios = (props) => {
 
   const handleChallengeSelect = (desafio) => {
     axios
-      .post(baseApi + "/api/games",  {
-        userID: userInfo.id,
-        challengeID: desafio.id,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      .post(
+        baseApi + "/api/games",
+        {
+          userID: userInfo.id,
+          challengeID: desafio.id,
         },
-      })
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         desafio["gameID"] = response.data.id;
-        navigate("/desafio", { state: { desafio }, replace : true });
+        navigate("/desafio", { state: { desafio }, replace: true });
       })
       .catch((err) => {
         console.log(err);
@@ -39,7 +43,7 @@ const ListaDesafios = (props) => {
     if (!loadingToken) {
       if (token === null) {
         navigate("/login");
-      } 
+      }
     }
   }, [loadingToken]);
 
@@ -57,7 +61,13 @@ const ListaDesafios = (props) => {
         >
           <CardContent>
             <Typography>{desafio.nome}</Typography>
-            <Typography>{desafio.dificuldade}</Typography>
+            <Typography>
+              {desafio.dificuldade === 0
+                ? "Fácil"
+                : desafio.dificuldade === 1
+                ? "Médio"
+                : "Difícil"}
+            </Typography>
           </CardContent>
           <CardActions className="desafioButtons">
             <Button onClick={() => handleChallengeSelect(desafio)}>
