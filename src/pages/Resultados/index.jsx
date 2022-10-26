@@ -52,6 +52,7 @@ const Resultados = (props) => {
                             : challengeRes.data.dificulty === 1
                             ? "Médio"
                             : "Difícil",
+                        finished: gameRes.data.finshedAt !== null ? "Sim" : "Não",
                       });
                       element.userID === userInfo.id && setDesafios((desafios) => [...desafios, element])
                     });
@@ -90,6 +91,10 @@ const Resultados = (props) => {
     {
       title: "Pontuação",
       dataIndex: "score",
+    },
+    {
+      title: "Finalizado?",
+      dataIndex: "finished",
     },
   ];
 

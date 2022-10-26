@@ -15,6 +15,7 @@ const Editor = (props) => {
   return (
     <div className="editor">
       <AceEditor
+        readOnly={props.isReadOnly}
         mode="python"
         theme="dracula"
         height="300px"

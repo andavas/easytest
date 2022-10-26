@@ -21,6 +21,7 @@ export default function App() {
       elementos.push({
         id: desafio.id,
         dificuldade: desafio.dificulty,
+        tipo: desafio.type,
         nome: desafio.name,
         code: desafio.code,
         test: desafio.test,

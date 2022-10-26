@@ -94,16 +94,22 @@ export default function Desafio() {
       .then((response) => {
         const startedAt = new Date(response.data.createdAt);
         console.log(state.desafio);
-        const pts = Math.floor(
-          isError
-            ? 0
-            : (state.desafio.dificuldade + 1) * 10000 -
-                ((finishedAt - startedAt) / 1000) * (1 + reloads / 10)
-        );
+
+
+        const pts = isError
+          ? 0
+          : Math.floor(
+              (state.desafio.dificuldade + 1) * 10000 -
+                ((finishedAt - startedAt) / 100) * (1 + reloads / 10)
+            );
+        if (pts < 0) {
+          setScore(0);
+          return 0;
+        }
         setScore(pts);
-        return pts
+        return pts;
       });
-      return {pontos, finishedAt}
+    return { pontos, finishedAt };
   };
 
   const checkOutput = () => {
@@ -200,6 +206,7 @@ export default function Desafio() {
           <Editor
             code={maincode}
             handleCode={setEditorMain}
+            isReadOnly={state.desafio.tipo === 0 | state.desafio.tipo === 1 ? false : true}
             isButtonDisabled={!isPyodideLoaded}
             handleButtonClick={handleMainClick}
             isReloadButtonDisabled={!isPyodideLoaded || loadingClearCode}
@@ -209,6 +216,7 @@ export default function Desafio() {
           <Editor
             code={testcode}
             handleCode={setEditorTest}
+            isReadOnly={state.desafio.tipo === 0 | state.desafio.tipo === 2 ? false : true}
             isButtonDisabled={!isPyodideLoaded}
             handleButtonClick={handleTestClick}
             isReloadButtonDisabled={!isPyodideLoaded || loadingClearCode}
