@@ -37,7 +37,7 @@ print(f'{output}')
 
 export default function Desafio() {
   // env constants
-  const baseApi = "http://localhost:4000";
+  const baseApi = process.env.REACT_APP_BASE_APII;
   const navigate = useNavigate();
   const { state } = useLocation();
   const { token } = useAuthContext();

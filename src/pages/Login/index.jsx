@@ -7,7 +7,7 @@ import { useAuthContext } from "../../context/authContext";
 import "./styles.css";
 
 const Login = () => {
-  const baseApi = "http://localhost:4000";
+  const baseApi = process.env.REACT_APP_BASE_API;
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(false);
   const [email, setEmail] = React.useState("");

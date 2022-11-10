@@ -6,7 +6,7 @@ import "./Perfil.css";
 import axios from "axios";
 
 const Perfil = () => {
-  const baseApi = "http://localhost:4000";
+  const baseApi = process.env.REACT_APP_BASE_API;
   const { token, userInfo } = useAuthContext();
   const [name, setName] = React.useState(userInfo.name);
   const [email, setEmail] = React.useState(userInfo.email); 
