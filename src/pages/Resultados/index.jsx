@@ -14,7 +14,7 @@ const Resultados = (props) => {
   const navigate = useNavigate();
   const [desafios, setDesafios] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const baseApi = "http://localhost:4000";
+  const baseApi = process.env.REACT_APP_BASE_APII;
 
   React.useEffect(async () => {
     if (!loadingToken) {

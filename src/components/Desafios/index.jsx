@@ -12,7 +12,7 @@ import axios from "axios";
 import { useAuthContext } from "../../context/authContext";
 
 const ListaDesafios = (props) => {
-  const baseApi = "http://localhost:4000";
+  const baseApi = process.env.REACT_APP_BASE_API;
   const { userInfo, token, loadingToken } = useAuthContext();
   const navigate = useNavigate();
 

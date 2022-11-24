@@ -11,7 +11,7 @@ export default function ResultTable (props) {
     const { token, loadingToken } = useAuthContext();
     const navigate = useNavigate();
     const [desafios, setDesafios] = React.useState([]);
-    const baseApi = "http://localhost:4000";
+    const baseApi = process.env.REACT_APP_BASE_API;
 
     React.useEffect(async () => {
         if (!loadingToken) {

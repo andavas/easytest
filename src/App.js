@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 
 export default function App() {
-  const baseApi = "http://localhost:4000";
+  const baseApi = process.env.REACT_APP_BASE_API;
   const { loadingToken, token, clearToken, clearUserInfo } = useAuthContext();
   const navigate = useNavigate();
 
