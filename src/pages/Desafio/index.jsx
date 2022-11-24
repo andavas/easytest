@@ -37,7 +37,7 @@ print(f'{output}')
 
 export default function Desafio() {
   // env constants
-  const baseApi = process.env.REACT_APP_BASE_APII;
+  const baseApi = process.env.REACT_APP_BASE_API;
   const navigate = useNavigate();
   const { state } = useLocation();
   const { token } = useAuthContext();
@@ -69,10 +69,10 @@ export default function Desafio() {
 
   //editor functions
   const handleMainClick = async () => {
-    setCode(codePreamble + dedent(maincode));
+    setCode(codePreamble + maincode);
   };
   const handleTestClick = async () => {
-    setCode(codePreamble + dedent(maincode + testcode + codeEpilogue));
+    setCode(codePreamble + maincode + testcode + codeEpilogue);
   };
   const handleOkModal = () => {
     navigate("/");
@@ -127,6 +127,7 @@ export default function Desafio() {
   };
 
   const handleSubmitChallenge = async () => {
+    console.log('teste')
     if (checkOutput()) {
       setConfirmLoading(true);
       const result = await calculateScore();
