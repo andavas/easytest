@@ -40,12 +40,12 @@ export function AuthProvider({ children }) {
 
   function saveUserInfo(userInfo) {
     localStorage.setItem("userInfo", JSON.stringify(userInfo));
-    setToken(userInfo);
+    setUserInfo(userInfo);
   }
 
   function clearUserInfo() {
     localStorage.setItem("userInfo", "");
-    setToken("");
+    setUserInfo("");
   }
 
   return (

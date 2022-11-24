@@ -199,7 +199,7 @@ export default function Desafio() {
       <div className="desafio">
         <div id="desafioInfo">
           <div>{state.desafio.nome}</div>
-          <div>{state.desafio.dificuldade}</div>
+          <div>{"Nível "+(state.desafio.dificuldade === 0 ? "Fácil" : state.desafio.dificuldade === 1 ? "Médio" : "Difícil")}</div>
           <div>Reloads: {reloads}</div>
         </div>
         <div id="AppEditors">

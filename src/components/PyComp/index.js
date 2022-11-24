@@ -13,21 +13,20 @@ const PyComp = (props) => {
   
   React.useEffect(async () => {
     try{
-
       const script = props.code; 
-      if (!pyodide) {
-        loadPyodide()
+      if (!pyodide) { // primeira execução
+        loadPyodide() // pyodide é carregado para o navegador do jogador
         .then((response) => {
           setPyodide(response)
-          const out = response.runPython(script);
+          const out = response.runPython(script);  // execução do código python
           props.setOutput(out);
           props.handlePyodideLoad(true)
           props.setIsError(false)
         });
       }
       else { // depois da primeira execução o setPyodide já rodou
-        const out = pyodide.runPython(script);
-        props.setOutput(out);
+        const out = pyodide.runPython(script); // execução do código python
+        props.setOutput(out); 
         props.setIsError(false)
       }
     } catch (pyError) {
