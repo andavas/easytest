@@ -2,99 +2,76 @@ import React from "react";
 import "./App.css";
 import ListaDesafios from "./components/Desafios";
 import Header from "./components/Header";
-import Footer from "./components/Footer";
-
-const desafios = [
-  {
-    nome: "Código com erro",
-    dificuldade: "Fácil",
-    pontuacao: 0,
-    tempo: 0,
-    reloads: 0,
-    code: `
-    def soma(a, b):
-    return (a + b)
-
-  a, b = 5, 7
-  #a = int(input('Enter 1st number: '))
-  #c = int(input('Enter 2nd number: '))
-
-  print(f'Soma de {a} e {b} é {soma(a, b)}')
-    `,
-    test: `
-    class TestSum(unittest.TestCase):
-        def test_list_int(self):
-            """
-            Testa se consegue somar dois números positivos
-            """
-            a, b = 2, 5
-            result = soma(a,b)
-            self.assertEqual(result, 7)
-    
-        def test_list_neg_int(self):
-            """
-            Testa se consegue somar dois números negativos
-            """
-            a,b = -2, -8
-            result = soma(a,b)
-            self.assertEqual(result, -10)
-    
-        def test_bad_type(self):
-            a,b = 'banana', 3
-            with self.assertRaises(TypeError):
-                result = soma(a,b)`,
-  },
-  {
-    nome: "Teste com erro",
-    dificuldade: "Fácil",
-    pontuacao: 1,
-    tempo: 0,
-    reloads: 0,
-    code: `
-    def soma(a, b):
-    return (a + b)
-  
-  a, b = 5, 7
-  #a = int(input('Enter 1st number: '))
-  #c = int(input('Enter 2nd number: '))
-  
-  print(f'Soma de {a} e {b} é {soma(a, b)}')
-    `,
-    test: `
-    class TestSum(unittest.TestCase):
-        def test_list_int(self):
-            """
-            Testa se consegue somar dois números positivos
-            """
-            a, b = 2, 5
-            result = soma(a,b)
-            self.assertEqual(result, 7)
-    
-        def test_list_neg_int(self):
-            """
-            Testa se consegue somar dois números negativos
-            """
-            a,b = -2, -8
-            result = soma(a,b)
-            self.assertEqual(result, -10)
-    
-        def test_bad_type(self):
-            a,b = 'banana', 3
-            with self.assertRaises(TypeError):
-                result = soma(a,b)`,
-  },
-];
+import axios from "axios";
+import { useAuthContext } from "./context/authContext";
+import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
 export default function App() {
+  const baseApi = process.env.REACT_APP_BASE_API;
+  const { loadingToken, token, clearToken, clearUserInfo } = useAuthContext();
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = React.useState(false);
+  const [desafio, setDesafio] = React.useState();
+
+  const remapDesafio = (desafios) => {
+    let elementos = [];
+    desafios.forEach((desafio) => {
+      elementos.push({
+        id: desafio.id,
+        dificuldade: desafio.dificulty,
+        tipo: desafio.type,
+        nome: desafio.name,
+        code: desafio.code,
+        test: desafio.test,
+      });
+    });
+    return elementos;
+  };
+
+  React.useEffect(async () => {
+    if (!loadingToken) {
+      if (token === null) {
+        navigate("/login");
+      } else {
+        await axios
+          .get(baseApi + "/api/challenges", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            setDesafio(remapDesafio(response.data));
+          })
+          .catch((err) => {
+            if (err.response.data.statusCode === 401) {
+              navigate("/login");
+              clearToken();
+              clearUserInfo()
+            } else {
+              console.log(err);
+            }
+          });
+      }
+    }
+  }, [loadingToken]);
+
+  if (!token) {
+    return <></>;
+  }
 
   return (
     <div className="App">
-      <Header/>
-      <div>
-        Testes
-      </div>
-      <ListaDesafios desafios={desafios}/>
-      <Footer/>
+      <Header />
+      {desafio ? (
+        <div className="ListaDesafiosContainer">
+          <div>Desafios</div>
+          <ListaDesafios desafios={desafio} />
+        </div>
+      ) : (
+        <CircularProgress />
+      )}
     </div>
   );
 }

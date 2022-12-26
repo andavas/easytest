@@ -1,4 +1,4 @@
-.App {
+.loginContainer {
     text-align: center;
     background-color: white;
     min-height: 100vh;
@@ -9,4 +9,11 @@
     font-size: calc(10px + 2vmin);
     color: black;
   }
+
+.loginForm {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    height: 150px;
+}
   

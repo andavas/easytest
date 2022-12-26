@@ -1,5 +1,4 @@
 import React from 'react';
-
 import './styles.css'
 
 const PyComp = (props) => {
@@ -10,30 +9,37 @@ const PyComp = (props) => {
     return await pyodide
   };
   
-  const [output, setOutput] = React.useState("Carregando Pyodide...");
   const [pyodide, setPyodide]= React.useState();
   
   React.useEffect(async () => {
+    try{
       const script = props.code; 
-      if (!pyodide) {
-        loadPyodide()
+      if (!pyodide) { // primeira execução
+        loadPyodide() // pyodide é carregado para o navegador do jogador
         .then((response) => {
           setPyodide(response)
-          const out = response.runPython(script);
-          setOutput(out);
+          const out = response.runPython(script);  // execução do código python
+          props.setOutput(out);
           props.handlePyodideLoad(true)
+          props.setIsError(false)
         });
       }
       else { // depois da primeira execução o setPyodide já rodou
-        const out = pyodide.runPython(script);
-        setOutput(out);
-        console.log(script)
+        const out = pyodide.runPython(script); // execução do código python
+        props.setOutput(out); 
+        props.setIsError(false)
       }
+    } catch (pyError) {
+      if (pyError.name === "PythonError") {
+        props.setOutput(pyError.message);
+        props.setIsError(true)
+      } 
+    } 
   }, [props.code]);
 
 
-  return(<div id='pyodideOutputContainer'>
-    {output}
+  return(<div id='pyodideOutputContainer' className={props.isError ? 'error' : ''}>
+    {props.output}
   </div>);
 }
 

@@ -5,3 +5,12 @@
     align-items: center;
     margin: 0 20px;
 }
+
+.buttonContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    margin: 0 20px;
+    gap: 10px
+}
