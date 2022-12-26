@@ -23,6 +23,7 @@ export default function ResultTable (props) {
                     Authorization: `Bearer ${token}`,
                 },
             }).then((response) => {
+                console.log(response.data);
                 response.data.data.forEach((desafio) => {
                     axios.get(baseApi + '/api/games/' + desafio.id, {
                         headers: {
