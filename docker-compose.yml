@@ -1,0 +1,16 @@
+version: '3.3'
+
+services:
+  app:
+    container_name: easytest
+    image: easytest
+    networks:
+      - easytest-network
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+networks:
+  easytest-network:
+    driver: bridge
